@@ -48,7 +48,7 @@ public class ClientServer {
         }
     }
 
-    public void putFile(String name) throws IOException {
+    public boolean putFile(String name) throws IOException {
         //upDateInputOutput();
         if (!FileManager.checkFileExists(name)) {
             System.out.println("Введите содержимое файла");
@@ -59,7 +59,7 @@ public class ClientServer {
         System.out.println("Введите название файла для загрузки его на сервер: ");
         String fileServer = scanner.nextLine();
         //if (fileServer== null || fileServer.trim().equals("")) {
-        //   fileServer = name;
+         //   fileServer = name;
         //}
 
         output.writeUTF("PUT " + fileServer);
@@ -79,10 +79,10 @@ public class ClientServer {
         String otv = input.readUTF();
         if(otv.equals("200")){
             System.out.println("Файл сохранен на сервер. ID = " + input.readUTF());
-
+            return true;
         }else{
             System.out.println("Ошибка! Не удалось загрузить файл на сервер...");
-            
+            return false;
 
 
         }

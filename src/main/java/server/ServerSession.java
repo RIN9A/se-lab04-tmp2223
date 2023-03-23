@@ -8,17 +8,17 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 public class ServerSession implements Runnable {
-    private final ServerFiles serverFiles;
-    private final ExecutorService executorService;
-    private final ServerSocket serverSocket;
-    private final Socket socket;
+    private ServerFiles serverFiles;
+    private ExecutorService executorService;
+    private ServerSocket serverSocket;
+    private Socket socket;
 
     public ServerSession(ServerFiles serverFiles, ServerSocket serverSocket, ExecutorService executorService) throws IOException {
 
-        this.serverFiles = serverFiles;
-        this.serverSocket = serverSocket;
-        this.socket = serverSocket.accept();
-        this.executorService = executorService;
+            this.serverFiles = serverFiles;
+            this.serverSocket = serverSocket;
+            this.socket = serverSocket.accept();
+            this.executorService = executorService;
 
 
     }
@@ -27,26 +27,26 @@ public class ServerSession implements Runnable {
     @Override
     public void run() {
         try (
-                DataInputStream input = new DataInputStream(socket.getInputStream());
-                DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
+             DataInputStream input = new DataInputStream(socket.getInputStream());
+             DataOutputStream output = new DataOutputStream(socket.getOutputStream())) {
 
             String str = input.readUTF();
             while (!str.equals("exit") ){
-                String[] action = str.split(" ");
-                if (action[0].equals("GET")) {
-                    //System.out.println("Скачивание файла с сервера...");
-                    getFiles(action, output);
-                } else if (action[0].equals("PUT")) {
-                    //System.out.println("Загрузка файла на сервер...");
-                    putFiles(action, output, input);
+                    String[] action = str.split(" ");
+                    if (action[0].equals("GET")) {
+                        //System.out.println("Скачивание файла с сервера...");
+                        getFiles(action, output);
+                    } else if (action[0].equals("PUT")) {
+                        //System.out.println("Загрузка файла на сервер...");
+                        putFiles(action, output, input);
 
-                } else {
-                    //System.out.println("Удаление файла с сервера...");
-                    deleteFiles(action, output);
+                    } else {
+                        //System.out.println("Удаление файла с сервера...");
+                        deleteFiles(action, output);
                 }
-                str = input.readUTF();
+            str = input.readUTF();
             }
-
+            serverFiles.writeDirFiles();
             this.executorService.shutdown();
             this.serverSocket.close();
 
@@ -149,7 +149,7 @@ public class ServerSession implements Runnable {
             String fileName = "file" + i;
             File file = new File(folder, fileName);
             if (!file.exists()) {
-                return fileName + ".txt";
+                return fileName;
             }
             i++;
         }
@@ -173,4 +173,10 @@ public class ServerSession implements Runnable {
 
 
 }
+
+
+
+
+
+
 
