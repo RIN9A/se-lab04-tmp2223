@@ -37,6 +37,10 @@ public class Main {
 
         System.out.println("Введите " + searchBy + " файла: ");
         String nameId = scanner.nextLine();
+        if(nameId == null || nameId.isEmpty()){
+            System.out.println("Не корректное имя файла");
+            enterAction();
+        }
 
         clientServer.getFile(searchBy, nameId);
     }
@@ -52,7 +56,7 @@ public class Main {
         String str = scanner.nextLine();
         String searchBy = str.equals("1") ? "имя" : "id";
 
-        System.out.println("Введите " + searchBy + "файла: ");
+        System.out.println("Введите " + searchBy + " файла: ");
         String nameId = scanner.nextLine();
 
         clientServer.deleteFile(searchBy, nameId);
